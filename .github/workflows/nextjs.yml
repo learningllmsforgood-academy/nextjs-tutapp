@@ -32,11 +32,17 @@ jobs:
         uses: actions/setup-node@v3 # https://github.com/actions/setup-node
         with:
           node-version-file: .nvmrc
-          cache: ${{ steps.detect-package-manager.outputs.manager }}
       
       - name: Setup Pages
+        id: setup-pages
         uses: actions/configure-pages@v3 # https://github.com/actions/configure-pages
+        # outputs base_path. Examples: "/my-repo" or ""
       
+      - name: Set images base path
+        id: set-images-base-path
+        run: |
+          echo 'basePath="${{steps.setup-pages.outputs.base_path}}";' >> ${{ github.workpsace }}/image-loader.js
+
       # next.js build caching. doc:
       # https://nextjs.org/docs/pages/building-your-application/deploying/ci-build-caching#github-actions
       - name: Restore cache
@@ -55,7 +61,7 @@ jobs:
         run: npm ci
       
       - name: Build with Next.js
-        run: npm run build
+        run: BASE_PATH=${{steps.setup-pages.outputs.base_path}} npm run build
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
