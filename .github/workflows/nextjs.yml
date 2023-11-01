@@ -41,7 +41,9 @@ jobs:
       - name: Set images base path
         id: set-images-base-path
         run: |
-          echo 'basePath="${{steps.setup-pages.outputs.base_path}}";' >> ${{ github.workpsace }}/image-loader.js
+          cat image-loader.js
+          echo 'basePath="${{steps.setup-pages.outputs.base_path}}";' >> image-loader.js
+          cat image-loader.js
 
       # next.js build caching. doc:
       # https://nextjs.org/docs/pages/building-your-application/deploying/ci-build-caching#github-actions
